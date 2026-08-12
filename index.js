@@ -52,6 +52,38 @@ app.get("/chapters", async (req, res) => {
 });
 
 // -----------------------
+// Get single chapter
+// -----------------------
+
+app.get("/chapters/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data, error } = await supabase
+      .from("chapters")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      console.error("Chapter not found:", error);
+
+      return res.status(404).json({
+        error: "Chapter not found",
+      });
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching chapter:", error);
+
+    res.status(500).json({
+      error: "Server error",
+    });
+  }
+});
+
+// -----------------------
 // Bookmarks
 // -----------------------
 
