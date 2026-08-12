@@ -8,11 +8,8 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "https://think-and-grow-rich-client.vercel.app",
-  })
-);
+app.use(cors());
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
@@ -34,9 +31,7 @@ let userTheme = {
 
 app.get("/chapters", async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from("chapters")
-      .select("*");
+    const { data, error } = await supabase.from("chapters").select("*");
 
     if (error) {
       console.error("Error fetching chapters:", error);
@@ -84,9 +79,7 @@ app.post("/bookmarks/:chapterId", async (req, res) => {
     });
   }
 
-  const alreadyBookmarked = Bookmarks.find(
-    (bm) => bm.id === chapter.id
-  );
+  const alreadyBookmarked = Bookmarks.find((bm) => bm.id === chapter.id);
 
   if (alreadyBookmarked) {
     return res.status(409).json({
@@ -112,9 +105,7 @@ app.post("/bookmarks/:chapterId", async (req, res) => {
 app.delete("/bookmarks/:chapterId", (req, res) => {
   const { chapterId } = req.params;
 
-  const index = Bookmarks.findIndex(
-    (bookmark) => bookmark.id === chapterId
-  );
+  const index = Bookmarks.findIndex((bookmark) => bookmark.id === chapterId);
 
   if (index === -1) {
     return res.status(404).json({
@@ -158,9 +149,7 @@ app.post("/notes", (req, res) => {
 app.delete("/notes/:id", (req, res) => {
   const { id } = req.params;
 
-  const noteIndex = Notes.findIndex(
-    (note) => note.id === id
-  );
+  const noteIndex = Notes.findIndex((note) => note.id === id);
 
   if (noteIndex === -1) {
     return res.status(404).json({
